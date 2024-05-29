@@ -22,9 +22,9 @@ const HabitSchema = CollectionSchema(
       name: r'completedDays',
       type: IsarType.dateTimeList,
     ),
-    r'text': PropertySchema(
+    r'name': PropertySchema(
       id: 1,
-      name: r'text',
+      name: r'name',
       type: IsarType.string,
     )
   },
@@ -49,7 +49,7 @@ int _habitEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.completedDays.length * 8;
-  bytesCount += 3 + object.text.length * 3;
+  bytesCount += 3 + object.name.length * 3;
   return bytesCount;
 }
 
@@ -60,7 +60,7 @@ void _habitSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeDateTimeList(offsets[0], object.completedDays);
-  writer.writeString(offsets[1], object.text);
+  writer.writeString(offsets[1], object.name);
 }
 
 Habit _habitDeserialize(
@@ -72,7 +72,7 @@ Habit _habitDeserialize(
   final object = Habit();
   object.completedDays = reader.readDateTimeList(offsets[0]) ?? [];
   object.id = id;
-  object.text = reader.readString(offsets[1]);
+  object.name = reader.readString(offsets[1]);
   return object;
 }
 
@@ -372,20 +372,20 @@ extension HabitQueryFilter on QueryBuilder<Habit, Habit, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Habit, Habit, QAfterFilterCondition> textEqualTo(
+  QueryBuilder<Habit, Habit, QAfterFilterCondition> nameEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'text',
+        property: r'name',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Habit, Habit, QAfterFilterCondition> textGreaterThan(
+  QueryBuilder<Habit, Habit, QAfterFilterCondition> nameGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -393,14 +393,14 @@ extension HabitQueryFilter on QueryBuilder<Habit, Habit, QFilterCondition> {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'text',
+        property: r'name',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Habit, Habit, QAfterFilterCondition> textLessThan(
+  QueryBuilder<Habit, Habit, QAfterFilterCondition> nameLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -408,14 +408,14 @@ extension HabitQueryFilter on QueryBuilder<Habit, Habit, QFilterCondition> {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'text',
+        property: r'name',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Habit, Habit, QAfterFilterCondition> textBetween(
+  QueryBuilder<Habit, Habit, QAfterFilterCondition> nameBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -424,7 +424,7 @@ extension HabitQueryFilter on QueryBuilder<Habit, Habit, QFilterCondition> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'text',
+        property: r'name',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -434,67 +434,67 @@ extension HabitQueryFilter on QueryBuilder<Habit, Habit, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Habit, Habit, QAfterFilterCondition> textStartsWith(
+  QueryBuilder<Habit, Habit, QAfterFilterCondition> nameStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'text',
+        property: r'name',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Habit, Habit, QAfterFilterCondition> textEndsWith(
+  QueryBuilder<Habit, Habit, QAfterFilterCondition> nameEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'text',
+        property: r'name',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Habit, Habit, QAfterFilterCondition> textContains(String value,
+  QueryBuilder<Habit, Habit, QAfterFilterCondition> nameContains(String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'text',
+        property: r'name',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Habit, Habit, QAfterFilterCondition> textMatches(String pattern,
+  QueryBuilder<Habit, Habit, QAfterFilterCondition> nameMatches(String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'text',
+        property: r'name',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Habit, Habit, QAfterFilterCondition> textIsEmpty() {
+  QueryBuilder<Habit, Habit, QAfterFilterCondition> nameIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'text',
+        property: r'name',
         value: '',
       ));
     });
   }
 
-  QueryBuilder<Habit, Habit, QAfterFilterCondition> textIsNotEmpty() {
+  QueryBuilder<Habit, Habit, QAfterFilterCondition> nameIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'text',
+        property: r'name',
         value: '',
       ));
     });
@@ -506,15 +506,15 @@ extension HabitQueryObject on QueryBuilder<Habit, Habit, QFilterCondition> {}
 extension HabitQueryLinks on QueryBuilder<Habit, Habit, QFilterCondition> {}
 
 extension HabitQuerySortBy on QueryBuilder<Habit, Habit, QSortBy> {
-  QueryBuilder<Habit, Habit, QAfterSortBy> sortByText() {
+  QueryBuilder<Habit, Habit, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'text', Sort.asc);
+      return query.addSortBy(r'name', Sort.asc);
     });
   }
 
-  QueryBuilder<Habit, Habit, QAfterSortBy> sortByTextDesc() {
+  QueryBuilder<Habit, Habit, QAfterSortBy> sortByNameDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'text', Sort.desc);
+      return query.addSortBy(r'name', Sort.desc);
     });
   }
 }
@@ -532,15 +532,15 @@ extension HabitQuerySortThenBy on QueryBuilder<Habit, Habit, QSortThenBy> {
     });
   }
 
-  QueryBuilder<Habit, Habit, QAfterSortBy> thenByText() {
+  QueryBuilder<Habit, Habit, QAfterSortBy> thenByName() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'text', Sort.asc);
+      return query.addSortBy(r'name', Sort.asc);
     });
   }
 
-  QueryBuilder<Habit, Habit, QAfterSortBy> thenByTextDesc() {
+  QueryBuilder<Habit, Habit, QAfterSortBy> thenByNameDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'text', Sort.desc);
+      return query.addSortBy(r'name', Sort.desc);
     });
   }
 }
@@ -552,10 +552,10 @@ extension HabitQueryWhereDistinct on QueryBuilder<Habit, Habit, QDistinct> {
     });
   }
 
-  QueryBuilder<Habit, Habit, QDistinct> distinctByText(
+  QueryBuilder<Habit, Habit, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'text', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
     });
   }
 }
@@ -574,9 +574,9 @@ extension HabitQueryProperty on QueryBuilder<Habit, Habit, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Habit, String, QQueryOperations> textProperty() {
+  QueryBuilder<Habit, String, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'text');
+      return query.addPropertyName(r'name');
     });
   }
 }

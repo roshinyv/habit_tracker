@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/models/app_settings.dart';
 import 'package:habit_tracker/models/habit.dart';
@@ -31,7 +33,7 @@ class HabitDatabase extends ChangeNotifier {
   final List<Habit> currentHabits = [];
 
   Future<void> addHabit(String habitName) async {
-    final newHabit = Habit()..text = habitName;
+    final newHabit = Habit()..name = habitName;
     await isar.writeTxn(() => isar.habits.put(newHabit));
     readHabits();
   }
@@ -44,22 +46,48 @@ class HabitDatabase extends ChangeNotifier {
   }
 
   Future<void> updateHabitCompletion(int id, bool isCompleted) async {
+    print('updateHabitCompletion=========================');
     final habit = await isar.habits.get(id);
-    if (Habit != null) {
+    if (habit != null) {
       await isar.writeTxn(() async {
-        if (isCompleted && !habit!.completedDays.contains(DateTime.now())) {
+        if (isCompleted && !habit.completedDays.contains(DateTime.now())) {
           final today = DateTime.now();
           habit.completedDays.add(
-            DateTime(today.year, today.month, today.day),
+            DateTime(
+              today.year,
+              today.month,
+              today.day,
+            ),
           );
         } else {
-          habit!.completedDays.removeWhere((date) =>
-              date.year == DateTime.now().year &&
-              date.month == DateTime.now().month &&
-              date.day == DateTime.now().day);
+          habit.completedDays.removeWhere(
+            (date) =>
+                date.year == DateTime.now().year &&
+                date.month == DateTime.now().month &&
+                date.day == DateTime.now().day,
+          );
         }
+        await isar.habits.put(habit);
       });
     }
-    await isar.habits.put(habit!);
+    readHabits();
+  }
+
+  Future<void> updateHabitName(int id, String newName) async {
+    final habit = await isar.habits.get(id);
+    if (habit != null) {
+      await isar.writeTxn(() async {
+        habit.name = newName;
+        await isar.habits.put(habit);
+      });
+    }
+    readHabits();
+  }
+
+  Future<void> deleteHabit(int id) async {
+    await isar.writeTxn(() async {
+      await isar.habits.delete(id);
+    });
+    readHabits();
   }
 }
